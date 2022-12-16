@@ -3,6 +3,7 @@
 ### Usage
 
 ```bash
+npx cy2pw test.cy.js test.spec.ts
 npx cy2pw ./cypress ./tests
 ```
 

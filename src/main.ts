@@ -26,16 +26,21 @@ import { program } from 'commander';
 const packageJSON = require('../package.json');
 program
     .version('Version ' + packageJSON.version)
-    .name('cy2pw')
-    .usage('<folder> <out>')
-    .argument('<folder>', 'Source folder, usually cypress/')
-    .argument('<out>', 'Target folder, usually tests/')
+    .name('npx cy2pw')
+    .usage('.cypress/ tests/')
+    .argument('<src>', 'Source file or folder')
+    .argument('<dst>', 'Target file or folder')
     .action((folder, out) => traverse(folder, out));
 
 program.showHelpAfterError();
 program.parse();
 
 function traverse(folder: string, out: string) {
+  if (fs.statSync(folder).isFile()) {
+    processFile(folder, out);
+    return;
+  }
+
   for (const name of fs.readdirSync(folder)) {
     const entry = path.join(folder, name);
     const outEntry = path.join(out, name);
@@ -49,7 +54,8 @@ function traverse(folder: string, out: string) {
 }
 
 function processFile(fileName: string, out: string) {
-  console.log(fileName);
+  out = out.replace('cy.js', 'spec.ts');
+  console.log(`${fileName} -> ${out}`);
   let text = fs.readFileSync(fileName, 'utf-8');
   text = text.replace('/// <reference types="cypress" />\n', '');
   const result = cy2pw(babel as BabelAPI, prettier, text);
@@ -57,5 +63,5 @@ function processFile(fileName: string, out: string) {
     throw new Error(result.error?.message);
   text = result.text;
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out.replace('cy.js', 'spec.ts'), text);
+  fs.writeFileSync(out, text);
 }
