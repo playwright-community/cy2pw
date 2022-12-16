@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2019",
+    "lib": ["esnext", "dom"],
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "rootDir": "src",
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

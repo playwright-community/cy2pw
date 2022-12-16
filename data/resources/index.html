@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>cypress-testing-library</title>
+  <style>
+    blockquote {
+      margin: 0;
+      border-left: 4px solid grey;
+      padding-left: 10px;
+      color: grey;
+    }
+    section {
+      padding: 10px;
+    }
+    input:valid + span {
+      display: none;
+    }
+    input:invalid + span {
+      display: block;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <blockquote>
+    No auto-reload after changing this static HTML markup:
+    click <span title="Run All Tests">↻</span> Run All Tests.
+  </blockquote>
+  <section>
+    <h2>*ByLabel and *ByPlaceholder</h2>
+    <label for="by-text-input">Label 1</label>
+    <input type="text" placeholder="Input 1" id="by-text-input" />
+
+    <label for="by-text-input-2">Label 2</label>
+    <input type="text" placeholder="Input 2" id="by-text-input-2" />
+
+    <p>Intentionally inaccessible label for error checking</p>
+    <label>Label 3</label>
+  </section>
+  <section>
+    <h2>*ByText</h2>
+    <button onclick="this.innerText = 'Button Clicked'">Button Text 1</button>
+    <div id="nested">
+      <h3>ByText within</h3>
+      <button onclick="this.innerText = 'Button Clicked'">Button Text 2</button>
+    </div>
+  </section>
+  <section>
+    <h2>*ByDisplayValue</h2>
+    <input type="text" value="Display Value 1" />
+
+    <input type="text" value="Display Value 2" />
+  </section>
+  <section>
+    <h2>*ByAltText</h2>
+    <img
+      src="data:image/png;base64,"
+      alt="Image Alt Text 1"
+      onclick="this.style.border = '5px solid red'"
+    />
+    <img
+      src="data:image/png;base64,"
+      alt="Image Alt Text 2"
+      onclick="this.style.border = '5px solid red'"
+    />
+  </section>
+  <section>
+    <h2>*ByTitle</h2>
+    <span title="Title 1">1</span>
+    <span title="Title 2">2</span>
+  </section>
+  <section>
+    <h2>*ByRole</h2>
+    <div role="dialog">dialog 1</div>
+    <div role="dialog-fake">dialog 2</div>
+  </section>
+  <section>
+    <h2>*ByTestId</h2>
+    <img
+      data-testid="image-with-random-alt-tag-1"
+      src="data:image/png;base64,"
+      onclick="this.style.border = '5px solid red'"
+    />
+    <img
+      data-testid="image-with-random-alt-tag-2"
+      src="data:image/png;base64,"
+      onclick="this.style.border = '5px solid red'"
+    />
+  </section>
+  <section>
+    <h2>*AllByText</h2>
+    <button onclick="this.innerText = 'Jackie Kicked'">Jackie Chan 1</button>
+    <button onclick="this.innerText = 'Jackie Kicked'">Jackie Chan 2</button>
+  </section>
+  <section>
+    <h2>*ByText on another page</h2>
+    <a onclick='setTimeout(function() { window.location = "./next-page.html"; }, 100);'>Next Page</a>
+  </section>
+  <section>
+    <h2>Eventual existence</h2>
+    <button id="eventually-will-exist"></button>
+    <script>
+      setTimeout(() => {
+        document.querySelector('#eventually-will-exist').innerHTML = 'Eventually Exists'
+      }, 500)
+    </script>
+  </section>
+  <section>
+    <h2>Eventual non-existence</h2>
+    <button id="eventually-will-not-exist">Eventually not exists</button>
+    <script>
+      setTimeout(() => {
+        document.querySelector('#eventually-will-not-exist').remove()
+      }, 500)
+    </script>
+  </section>
+  <section>
+    <h2>Chain selectors</h2>
+    <form onsubmit="return false" action="#">
+      <label>Required: <input type="text" required /><span>Error message</span></label>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+<!-- Prettier unindents the script tag below -->
+<script>
+document
+  .querySelector('[data-testid="image-with-random-alt-tag-1"]')
+  .setAttribute('alt', 'Image Random Alt Text ' + Math.random())
+</script>
+</body>
+</html>

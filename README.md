@@ -1,1 +1,7 @@
-# cy2pw-internal
+# cy2pw
+
+### Usage
+
+```bash
+npx cy2pw ./cypress ./tests
+```
