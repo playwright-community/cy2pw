@@ -2,5 +2,6 @@
 
 !README.md
 !LICENSE
-lib/*
-index.js
+!lib/*.js
+!index.js
+!main.js

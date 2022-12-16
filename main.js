@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (c) Microsoft Corporation.
  *
@@ -13,5 +14,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-require('./lib/main.js');
+module.exports = require('./lib/main');

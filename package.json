@@ -1,6 +1,6 @@
 {
   "name": "cy2pw",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "",
   "bin": {
     "cy2pw": "./main.js"
