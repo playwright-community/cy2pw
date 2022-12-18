@@ -35,6 +35,6 @@ test.describe('Aliasing', () => {
     await page.locator('.network-btn').click();
 
     // https://on.cypress.io/wait
-    await expect.poll(async () => (await getComment).status()).toBe(200);
+    expect((await getComment).status()).toBe(200);
   });
 });

@@ -203,7 +203,10 @@ test.describe('Cypress.spec', () => {
   test('Get current spec information', async ({ page }) => {
     // https://on.cypress.io/spec
     // wrap the object so we can inspect it easily by clicking in the command log
-    page.FIXME_wrap(Cypress.spec);
-    await page.FIXME_should('include.keys', ['name', 'relative', 'absolute']);
+    await Cypress.spec.FIXME_should('include.keys', [
+      'name',
+      'relative',
+      'absolute',
+    ]);
   });
 });

@@ -144,7 +144,7 @@ test.describe('Assertions', () => {
         const $div = page.locator('.docs-header').locator('div');
         await expect($div).toHaveCount(1);
 
-        const className = $div[0].className;
+        const className = await $div.nth(0).getAttribute('class');
         expect(className).toMatch(/heading-/);
       }).toPass();
       {
@@ -157,12 +157,12 @@ test.describe('Assertions', () => {
       await expect(async () => {
         const $div = page.locator('.docs-header').locator('div');
 
-        if ($div.length !== 1) {
+        if ((await $div.count()) !== 1) {
           // you can throw your own errors
           throw new Error('Did not find 1 element');
         }
 
-        const className = $div[0].className;
+        const className = await $div.nth(0).getAttribute('class');
 
         if (!className.match(/heading-/)) {
           throw new Error(`Could not find class "heading-" in ${className}`);

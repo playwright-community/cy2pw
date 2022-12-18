@@ -18,10 +18,9 @@ test.describe('Utilities', () => {
   test('Cypress.$ - call a jQuery method', async ({ page }) => {
     // https://on.cypress.io/$
     let $li = Cypress.$('.utility-jquery li:first');
-    page.FIXME_wrap($li);
-    await page.FIXME_should('not.have.class', 'active');
-    await page.click();
-    await page.FIXME_should('have.class', 'active');
+    await $li.FIXME_should('not.have.class', 'active');
+    await $li.click();
+    await $li.FIXME_should('have.class', 'active');
   });
 
   test('Cypress.Blob - blob utilities and base64 string conversion', async ({

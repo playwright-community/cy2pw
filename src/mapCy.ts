@@ -330,20 +330,23 @@ export const createCyMapping = (api: BabelAPI) => {
         return returnSyncFixme(subject, 'its', args);
 
       if (subject.type === SubjectType.Locator) {
-        if (args[0].value === 'length')
-          return wrap(subject.chain('count', [], SubjectType.Value));
+        if (args[0].value === 'length') {
+          // Pretend it is locator to do retries.
+          return wrap(subject.chain('count', [], SubjectType.Locator));
+        }
       }
 
       if (subject.type === SubjectType.Response) {
         let expression = args[0].value;
+        if (expression === 'body') {
+          expression = 'json';
+          return wrap(subject.chainAsync(expression, [], SubjectType.Value));
+        }
         if (expression.startsWith('response.'))
           expression = expression.substring('response.'.length);
         if (expression === 'statusCode')
           expression = 'status';
-        return wrap(createSubject(SubjectType.Value, t.callExpression(
-            t.memberExpression(subject.expression, t.identifier(expression)),
-            []
-        ), subject.depth + 1));
+        return wrap(subject.chain(expression, [], SubjectType.Value));
       }
 
       return wrap(subject.member(args[0].value, SubjectType.Value));
@@ -446,7 +449,7 @@ export const createCyMapping = (api: BabelAPI) => {
       return wrap(subject, subject.callAsync('reload'));
     }
 
-    request(subject: Subject, args: t.Expression[]): ReturnValue {
+    request(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
       // .request(url)
       // .request(url, body)
       // .request(method, url)
@@ -472,14 +475,25 @@ export const createCyMapping = (api: BabelAPI) => {
         return returnAsyncFixme(subject, 'request', args);
       }
       const properties: t.ObjectProperty[] = [];
+      const qs = utils.callOptionPropertyValue(args, 'qs');
+      if (qs)
+        return returnAsyncFixme(subject, 'request', args);
+
       const fetchMethod = httpMethodsWithShortcut.has(method) ? method.toLowerCase() : 'fetch';
       if (!httpMethodsWithShortcut.has(method))
         properties.push(t.objectProperty(t.identifier('method'), t.stringLiteral(method)));
+
       const responseExpression =
         subject
             .member('request', SubjectType.Request)
             .callAsync(fetchMethod, properties.length ? [url, t.objectExpression(properties)] : [url]);
-      return wrap(createSubject(SubjectType.Response, responseExpression, 3));
+
+      const { scope } = createScopeVariable(SubjectType.Response, 'response', context);
+      const varExpression = t.variableDeclaration(
+        'const',
+        [t.variableDeclarator(scope.expression as t.Identifier, responseExpression)]
+      );
+      return wrap(scope, varExpression);
     }
 
     rightclick(subject: Subject, args: t.Expression[]): ReturnValue {
@@ -601,10 +615,14 @@ export const createCyMapping = (api: BabelAPI) => {
       }
 
       // Other matchers.
+      const shouldRetry = subject.type === SubjectType.Locator;
       for (const [fromMatcher, toMatcher] of valueMatchers) {
         if (absMatcher !== fromMatcher)
           continue;
-        return wrap(subject, expectPollCall(subject.expression, isNot).callAsync(toMatcher.target, args.slice(1)));
+        const args2 = toMatcher.transform?.(args.slice(1), utils) || args.slice(1);
+        if (shouldRetry)
+          return wrap(subject, expectPollCall(subject.expression, isNot).callAsync(toMatcher.target, args2));
+        return wrap(subject, subject.expectSync(toMatcher.target, args2, isNot));
       }
 
       return returnAsyncFixme(subject, 'should', args);
@@ -661,6 +679,8 @@ export const createCyMapping = (api: BabelAPI) => {
           'const',
           [t.variableDeclarator(scope.expression as t.Identifier, subject.expression)]
       );
+      const variableIsNoop = t.isIdentifier(subject.expression, { name: (scope.expression as t.Identifier).name });
+
       if (subject.type === SubjectType.Window) {
         return wrap(
             subject,
@@ -678,11 +698,11 @@ export const createCyMapping = (api: BabelAPI) => {
             ]
         );
       }
-      const allStatements = [variable, ...statements];
-      if (name === 'then') {
+      const allStatements = variableIsNoop ? statements : [variable, ...statements];
+      if (name === 'then' || subject.type !== SubjectType.Locator) {
         return wrap(
             subject,
-            createBlockScope ? t.blockStatement(allStatements) : allStatements,
+            createBlockScope && !variableIsNoop ? t.blockStatement(allStatements) : allStatements,
         );
       }
       return wrap(
@@ -890,6 +910,10 @@ export const createCyMapping = (api: BabelAPI) => {
       );
     }
 
+    wrap(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
+      return wrap(createSubject(SubjectType.Value, args[0]));
+    }
+  
     _locatorSubject(subject: Subject, context: Context): Subject {
       if (context.state.scope?.type === SubjectType.Locator)
         return context.state.scope;

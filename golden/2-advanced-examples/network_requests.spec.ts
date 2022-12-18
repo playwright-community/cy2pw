@@ -9,18 +9,16 @@ test.describe('Network Requests', () => {
 
   test('cy.request() - make an XHR request', async ({ page }) => {
     // https://on.cypress.io/request
-    await expect(async () => {
-      const response = await page.request.get(
-        'https://jsonplaceholder.cypress.io/comments'
-      );
-      expect(response.status()).toBe(200);
-      // the server sometimes gets an extra comment posted from another machine
-      // which gets returned as 1 extra object
-      expect(await response.json()).toHaveProperty('length');
-      expect([500, 501]).toContain((await response.json()).length);
-      expect(response).toHaveProperty('headers');
-      expect(response).toHaveProperty('duration');
-    }).toPass();
+    const response = await page.request.get(
+      'https://jsonplaceholder.cypress.io/comments'
+    );
+    expect(response.status()).toBe(200);
+    // the server sometimes gets an extra comment posted from another machine
+    // which gets returned as 1 extra object
+    expect(await response.json()).toHaveProperty('length');
+    expect([500, 501]).toContain((await response.json()).length);
+    expect(response).toHaveProperty('headers');
+    expect(response).toHaveProperty('duration');
   });
 
   test('cy.request() - verify response using BDD syntax', async ({ page }) => {
@@ -38,64 +36,61 @@ test.describe('Network Requests', () => {
   test('cy.request() with query parameters', async ({ page }) => {
     // will execute request
     // https://jsonplaceholder.cypress.io/comments?postId=1&id=3
-    await (
-      await page.request.get('https://jsonplaceholder.cypress.io/comments')
-    )
-      .body()
-      .FIXME_should('be.an', 'array');
-    await (
-      await page.request.get('https://jsonplaceholder.cypress.io/comments')
-    )
-      .body()
-      .FIXME_should('have.length', 1);
-    await (
-      await page.request.get('https://jsonplaceholder.cypress.io/comments')
-    )
-      .body()[0]
-      .FIXME_should('contain', {
+    await page.FIXME_request({
+      url: 'https://jsonplaceholder.cypress.io/comments',
+      qs: {
         postId: 1,
         id: 3,
-      });
+      },
+    });
+    expect(page.body).toEqual(expect.any(Array));
+    expect(page.body).toHaveLength(1);
+    expect(page.body[0]).toEqual(
+      expect.objectContaining({
+        postId: 1,
+        id: 3,
+      })
+    );
   });
 
   test('cy.request() - pass result to the second request', async ({ page }) => {
     // first, let's find out the userId of the first user we have
-    const user = (
-      await page.request.get(
-        'https://jsonplaceholder.cypress.io/users?_limit=1'
-      )
-    ).body()[0];
-    expect(user.id).FIXME_toBeA('number');
+    const response = await page.request.get(
+      'https://jsonplaceholder.cypress.io/users?_limit=1'
+    );
+    const user = (await response.json())[0];
+    expect(user.id).toEqual(expect.any(Number));
+
     // make a new post on behalf of the user
-    const response = (
-      await page.request.get(
-        'https://jsonplaceholder.cypress.io/users?_limit=1'
-      )
-    ).body()[0];
-    expect(response.status).toBe(201); // new entity created
-    expect(response.body).toContain({
-      title: 'Cypress Test Runner',
-    });
+    const response = await user.request.post(
+      'https://jsonplaceholder.cypress.io/posts'
+    );
+    {
+      const response = (await response.json())[0];
+      expect(response.status).toBe(201); // new entity created
+      expect(response.body).toContain({
+        title: 'Cypress Test Runner',
+      });
 
-    // we don't know the exact post id - only that it will be > 100
-    // since JSONPlaceholder has built-in 100 posts
-    expect(response.body.id).FIXME_toBeA('number');
-    expect(response.body.id).toBeGreaterThan(100);
+      // we don't know the exact post id - only that it will be > 100
+      // since JSONPlaceholder has built-in 100 posts
+      expect(response.body.id).toEqual(expect.any(Number));
+      expect(response.body.id).toBeGreaterThan(100);
 
-    // we don't know the user id here - since it was in above closure
-    // so in this test just confirm that the property is there
-    expect(response.body.userId).FIXME_toBeA('number');
+      // we don't know the user id here - since it was in above closure
+      // so in this test just confirm that the property is there
+      expect(response.body.userId).toEqual(expect.any(Number));
+    }
   });
 
   test('cy.request() - save response in the shared test context', async ({
     page,
   }) => {
     // https://on.cypress.io/variables-and-aliases
-    const user = (
-      await page.request.get(
-        'https://jsonplaceholder.cypress.io/users?_limit=1'
-      )
-    ).body()[0];
+    const response = await page.request.get(
+      'https://jsonplaceholder.cypress.io/users?_limit=1'
+    );
+    const user = (await response.json())[0];
 
     // NOTE 👀
     //  By the time this callback runs the "as('user')" command
@@ -103,9 +98,10 @@ test.describe('Network Requests', () => {
     //  To access the test context we need to use
     //  the "function () { ... }" callback form,
     //  otherwise "this" points at a wrong or undefined object!
-    const post = (
-      await page.request.post('https://jsonplaceholder.cypress.io/posts')
-    ).body();
+    const response = await page.request.post(
+      'https://jsonplaceholder.cypress.io/posts'
+    );
+    const post = await response.json();
 
     // save the new post from the response
 

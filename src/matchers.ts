@@ -15,7 +15,7 @@
  */
 
 import { types as t } from '@babel/core';
-import { createUtils } from './utils';
+import { capitalize, createUtils } from './utils';
 
 export const locatorMatchers = new Map<string, {
   target: string,
@@ -114,12 +114,31 @@ export const pageMatchers = new Map<string, {
 
 export const valueMatchers = new Map<string, {
   target: string,
+  transform?: (args: t.Expression[], utils: ReturnType<typeof createUtils>) => t.Expression[];
 }>([
+  ['be.an', { target: 'toEqual', transform: (args, utils) => {
+    if (!t.isStringLiteral(args[0]))
+      return args;
+    return [utils.makeSyncCall(
+      t.identifier('expect'),
+      'any',
+      [t.identifier(capitalize(args[0].value))]
+    )];
+  } }],
   ['be.gt', { target: 'toBeGreaterThan' }],
   ['be.lt', { target: 'toBeLessThan' }],
   ['be.gte', { target: 'toBeGreaterThanOrEqual' }],
   ['be.lte', { target: 'toBeLessThanOrEqual' }],
+  ['contain', { target: 'toEqual', transform: (args, utils) => {
+    return [utils.makeSyncCall(
+      t.identifier('expect'),
+      'objectContaining',
+      [args[0]]
+    )];
+  } }],  
   ['deep.equal', { target: 'toEqual' }],
   ['eq', { target: 'toBe' }],
   ['include', { target: 'toContain' }],
+  ['have.length', { target: 'toHaveLength' }],
+  ['have.property', { target: 'toHaveProperty' }],
 ]);

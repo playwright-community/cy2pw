@@ -19,12 +19,10 @@ test.describe('Local Storage', () => {
 
     // clearLocalStorage() yields the localStorage object
     page.FIXME_clearLocalStorage();
-    await expect(async () => {
-      const ls = page;
-      expect(ls.getItem('prop1')).toBeNull();
-      expect(ls.getItem('prop2')).toBeNull();
-      expect(ls.getItem('prop3')).toBeNull();
-    }).toPass();
+    const ls = page;
+    expect(ls.getItem('prop1')).toBeNull();
+    expect(ls.getItem('prop2')).toBeNull();
+    expect(ls.getItem('prop3')).toBeNull();
     await page.locator('.ls-btn').click();
     expect(localStorage.getItem('prop1')).toBe('red');
     expect(localStorage.getItem('prop2')).toBe('blue');
@@ -32,10 +30,10 @@ test.describe('Local Storage', () => {
 
     // Clear key matching string in Local Storage
     page.FIXME_clearLocalStorage('prop1');
-    await expect(async () => {
+    {
       const ls = page;
       expect(ls.getItem('prop1')).toBeNull();
-    }).toPass();
+    }
     await page.locator('.ls-btn').click();
     expect(localStorage.getItem('prop1')).toBe('red');
     expect(localStorage.getItem('prop2')).toBe('blue');
@@ -43,10 +41,10 @@ test.describe('Local Storage', () => {
 
     // Clear keys matching regex in Local Storage
     page.FIXME_clearLocalStorage(/prop1|2/);
-    await expect(async () => {
+    {
       const ls = page;
       expect(ls.getItem('prop1')).toBeNull();
       expect(ls.getItem('prop2')).toBeNull();
-    }).toPass();
+    }
   });
 });

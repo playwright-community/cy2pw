@@ -38,12 +38,6 @@ test.describe('Connectors', () => {
   }) => {
     // https://on.cypress.io/spread
     const arr = ['foo', 'bar', 'baz'];
-    page.FIXME_wrap(arr);
-    page.FIXME_spread(async (foo, bar, baz) => {
-      expect(foo).toBe('foo');
-      expect(bar).toBe('bar');
-      expect(baz).toBe('baz');
-    });
   });
 
   test.describe('.then()', () => {
@@ -59,24 +53,22 @@ test.describe('Connectors', () => {
     });
 
     test('yields the returned value to the next command', async ({ page }) => {
-      page.FIXME_wrap(1);
-      const num = page;
+      const num = 1;
       expect(num).toBe(1);
 
       return 2;
       {
-        const num = page;
+        const num = 1;
         expect(num).toBe(2);
       }
     });
 
     test('yields the original subject without return', async ({ page }) => {
-      page.FIXME_wrap(1);
-      const num = page;
+      const num = 1;
       expect(num).toBe(1);
       // note that nothing is returned from this callback
       {
-        const num = page;
+        const num = 1;
 
         // this callback receives the original unchanged value 1
         expect(num).toBe(1);
@@ -86,15 +78,13 @@ test.describe('Connectors', () => {
     test('yields the value yielded by the last Cypress command inside', async ({
       page,
     }) => {
-      page.FIXME_wrap(1);
-      const num = page;
+      const num = 1;
       expect(num).toBe(1);
       // note how we run a Cypress command
       // the result yielded by this Cypress command
       // will be passed to the second ".then"
-      num.FIXME_wrap(2);
       {
-        const num = page;
+        const num = 1;
 
         // this callback receives the value yielded by "cy.wrap(2)"
         expect(num).toBe(2);

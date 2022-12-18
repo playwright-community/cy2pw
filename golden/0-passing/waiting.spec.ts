@@ -26,6 +26,6 @@ test.describe('Waiting', () => {
     await page.locator('.network-btn').click();
 
     // wait for GET comments/1
-    await expect.poll(async () => (await getComment).status()).toBe(200);
+    expect((await getComment).status()).toBe(200);
   });
 });

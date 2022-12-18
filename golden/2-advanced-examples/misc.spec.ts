@@ -58,7 +58,7 @@ test.describe('Misc', () => {
       return;
     }
     page.FIXME_exec('echo Jane Lane');
-    await page.stdout.FIXME_should('contain', 'Jane Lane');
+    expect(page.stdout).toEqual(expect.objectContaining('Jane Lane'));
 
     if (process.platform === 'win32') {
       page.FIXME_exec(`print ${Cypress.config('configFile')}`);
@@ -67,7 +67,7 @@ test.describe('Misc', () => {
       page.FIXME_exec(`cat ${Cypress.config('configFile')}`);
       await page.stderr.FIXME_should('be.empty');
       page.FIXME_exec('pwd');
-      await expect.poll(async () => page.code).toBe(0);
+      expect(page.code).toBe(0);
     }
   });
 
@@ -107,8 +107,7 @@ test.describe('Misc', () => {
 
   test('cy.wrap() - wrap an object', async ({ page }) => {
     // https://on.cypress.io/wrap
-    page.FIXME_wrap({ foo: 'bar' });
-    await page.FIXME_should('have.property', 'foo');
-    await expect.poll(async () => page).toContain('bar');
+    expect({ foo: 'bar' }).toHaveProperty('foo');
+    expect({ foo: 'bar' }).toContain('bar');
   });
 });

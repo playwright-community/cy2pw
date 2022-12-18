@@ -12,20 +12,16 @@ test.describe('Location', () => {
 
   test('cy.location() - get window.location', async ({ page }) => {
     // https://on.cypress.io/location
-    await expect(async () => {
-      const location = new URL(page.url());
-      expect(location.hash).toBeFalsy();
-      expect(location.href).toBe(
-        'https://example.cypress.io/commands/location'
-      );
-      expect(location.host).toBe('example.cypress.io');
-      expect(location.hostname).toBe('example.cypress.io');
-      expect(location.origin).toBe('https://example.cypress.io');
-      expect(location.pathname).toBe('/commands/location');
-      expect(location.port).toBe('');
-      expect(location.protocol).toBe('https:');
-      expect(location.search).toBeFalsy();
-    }).toPass();
+    const location = new URL(page.url());
+    expect(location.hash).toBeFalsy();
+    expect(location.href).toBe('https://example.cypress.io/commands/location');
+    expect(location.host).toBe('example.cypress.io');
+    expect(location.hostname).toBe('example.cypress.io');
+    expect(location.origin).toBe('https://example.cypress.io');
+    expect(location.pathname).toBe('/commands/location');
+    expect(location.port).toBe('');
+    expect(location.protocol).toBe('https:');
+    expect(location.search).toBeFalsy();
   });
 
   test('cy.url() - get the current URL', async ({ page }) => {

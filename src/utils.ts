@@ -116,3 +116,7 @@ export function escapeWithQuotes(text: string, char: string = '\'') {
     return char + escapedText.replace(/[`]/g, '`') + char;
   throw new Error('Invalid escape char');
 }
+
+export function capitalize(name: string): string {
+  return name[0].toUpperCase() + name.slice(1);
+}

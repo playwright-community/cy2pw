@@ -41,7 +41,48 @@ export const transform = declare((api: BabelAPI) => {
   const expectMapping = new ExpectMapping();
   const utils = createUtils(api);
 
+  const membersToCallExpressions: (variableName: string) => Visitor = variableName => ({
+    MemberExpression(path) {
+      if (t.isCallExpression(path.parentPath.node))
+        return;
+      let object = path.node.object;
+      while (true) {
+        if (t.isMemberExpression(object)) {
+          object = object.object;
+          continue;
+        }
+        if (t.isCallExpression(object)) {
+          object = object.callee as t.Expression;
+          continue;
+        }
+        if (t.isIdentifier(object, { name: variableName }))
+          break;
+        return;
+      }
+
+      if (path.node.computed && t.isNumericLiteral(path.node.property)) {
+        path.replaceWith(utils.makeSyncCall(path.node.object,'nth', [path.node.property]));
+        return;
+      }
+
+      if (t.isIdentifier(path.node.property, { name: 'length' })) {
+        path.replaceWith(utils.makeAsyncCall(path.node.object, 'count'));
+        return;
+      }
+
+      if (t.isIdentifier(path.node.property, { name: 'className' })) {
+        path.replaceWith(utils.makeAsyncCall(path.node.object, 'getAttribute', [t.stringLiteral('class')]));
+        return;
+      }
+    }
+  });
+
   const visitor: (state: State) => Visitor = state => ({
+    BlockStatement(path) {
+      if (state.scope)
+        path.traverse(membersToCallExpressions((state.scope?.expression as t.Identifier).name));
+    },
+
     CallExpression(path) {
       // Hooks.
       if (prefixWithTest(path, 'describe', false, false))
@@ -155,6 +196,11 @@ export const transform = declare((api: BabelAPI) => {
         (path.node.object as t.Identifier).name = 'process';
         return;
       }
+
+      if (t.isIdentifier(path.node.object, { name: 'this' })) {
+        path.replaceWith(path.node.property);
+        return;
+      }
     }
   });
 
@@ -225,7 +271,6 @@ export const transform = declare((api: BabelAPI) => {
     if (state.scope?.type === SubjectType.Locator &&
         t.isIdentifier(objectPath.node, { name: (state.scope?.expression as t.Identifier).name }))
       return true;
-
 
     return false;
   }

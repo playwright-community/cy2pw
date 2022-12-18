@@ -31,10 +31,10 @@ test.describe('Files', () => {
     // we have code that gets a comment when
     // the button is clicked in scripts.js
     await page.locator('.fixture-btn').click();
-    await (await getComment).body().FIXME_should('have.property', 'name');
-    await expect
-      .poll(async () => (await getComment).body())
-      .toContain('Using fixtures to represent data');
+    expect((await getComment).body()).toHaveProperty('name');
+    expect((await getComment).body()).toContain(
+      'Using fixtures to represent data'
+    );
   });
 
   test('cy.fixture() or require - load a fixture', async function ({ page }) {
@@ -44,8 +44,7 @@ test.describe('Files', () => {
     expect(this.example).toEqual(requiredExample);
 
     // or use "cy.wrap" and "should('deep.equal', ...)" assertion
-    page.FIXME_wrap(this.example);
-    await expect.poll(async () => page).toEqual(requiredExample);
+    expect(this.example).toEqual(requiredExample);
   });
 
   test('cy.readFile() - read file contents', async ({ page }) => {
@@ -69,10 +68,8 @@ test.describe('Files', () => {
       'https://jsonplaceholder.cypress.io/users'
     );
     page.FIXME_fixture('users');
-    await expect(async () => {
-      const users = page;
-      expect(users[0].name).FIXME_exist();
-    }).toPass();
+    const users = page;
+    expect(users.nth(0).name).FIXME_exist();
 
     // JavaScript arrays and objects are stringified
     // and formatted into text.
@@ -82,9 +79,7 @@ test.describe('Files', () => {
       email: 'jane@example.com',
     });
     page.FIXME_fixture('profile');
-    await expect(async () => {
-      const profile = page;
-      expect(profile.name).toBe('Jane');
-    }).toPass();
+    const profile = page;
+    expect(profile.name).toBe('Jane');
   });
 });

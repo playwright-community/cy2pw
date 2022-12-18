@@ -16,7 +16,7 @@ test.describe('Cookies', () => {
 
     // cy.getCookie() yields a cookie object
     page.FIXME_getCookie('token');
-    await page.FIXME_should('have.property', 'value', '123ABC');
+    expect(page).toHaveProperty('value', '123ABC');
   });
 
   test('cy.getCookies() - get browser cookies', async ({ page }) => {
@@ -27,17 +27,15 @@ test.describe('Cookies', () => {
 
     // cy.getCookies() yields an array of cookies
     page.FIXME_getCookies();
-    await page.FIXME_should('have.length', 1);
-    await expect(async () => {
-      const cookies = page;
-      // each cookie has these properties
-      expect(cookies[0]).toHaveProperty('name', 'token');
-      expect(cookies[0]).toHaveProperty('value', '123ABC');
-      expect(cookies[0]).toHaveProperty('httpOnly', false);
-      expect(cookies[0]).toHaveProperty('secure', false);
-      expect(cookies[0]).toHaveProperty('domain');
-      expect(cookies[0]).toHaveProperty('path');
-    }).toPass();
+    expect(page).toHaveLength(1);
+    const cookies = page;
+    // each cookie has these properties
+    expect(cookies[0]).toHaveProperty('name', 'token');
+    expect(cookies[0]).toHaveProperty('value', '123ABC');
+    expect(cookies[0]).toHaveProperty('httpOnly', false);
+    expect(cookies[0]).toHaveProperty('secure', false);
+    expect(cookies[0]).toHaveProperty('domain');
+    expect(cookies[0]).toHaveProperty('path');
   });
 
   test('cy.setCookie() - set a browser cookie', async ({ page }) => {
@@ -48,7 +46,7 @@ test.describe('Cookies', () => {
 
     // cy.getCookie() yields a cookie object
     page.FIXME_getCookie('foo');
-    await page.FIXME_should('have.property', 'value', 'bar');
+    expect(page).toHaveProperty('value', 'bar');
   });
 
   test('cy.clearCookie() - clear a browser cookie', async ({ page }) => {
@@ -57,7 +55,7 @@ test.describe('Cookies', () => {
     await page.FIXME_should('be.null');
     await page.locator('#clearCookie .set-a-cookie').click();
     page.FIXME_getCookie('token');
-    await page.FIXME_should('have.property', 'value', '123ABC');
+    expect(page).toHaveProperty('value', '123ABC');
 
     // cy.clearCookies() yields null
     page.FIXME_clearCookie('token');
@@ -72,7 +70,7 @@ test.describe('Cookies', () => {
     await page.FIXME_should('be.empty');
     await page.locator('#clearCookies .set-a-cookie').click();
     page.FIXME_getCookies();
-    await page.FIXME_should('have.length', 1);
+    expect(page).toHaveLength(1);
 
     // cy.clearCookies() yields null
     page.FIXME_clearCookies();
