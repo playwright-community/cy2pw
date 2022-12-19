@@ -1,5 +1,9 @@
 # cy2pw
 
+## Experimental
+
+This tool is extremely experimental and only converts basic Cy structures.
+
 ### Usage
 
 ```bash
