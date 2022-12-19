@@ -15,4 +15,4 @@ npx cy2pw ./cypress ./tests
 
 Visit https://demo.playwright.dev/cy2pw/ to demo.
 
-![screenshot](https://user-images.githubusercontent.com/624760/208391034-20e215c7-6c12-4b4f-b2d3-1773a0fbb028.png)
+![screenshot](https://user-images.githubusercontent.com/883973/208539283-46281a45-7d4c-4fa7-b51a-93d86aa09b93.png)
