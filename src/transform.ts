@@ -19,7 +19,7 @@ import type { NodePath, Visitor } from '@babel/traverse';
 import type { types as t } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import { createUtils } from './utils';
-import { Context, State, SubjectType } from './mapping';
+import { type Context, type State, SubjectType } from './mapping';
 import { createCyMapping } from './mapCy';
 import { createExpectMapping } from './mapExpect';
 
@@ -61,7 +61,7 @@ export const transform = declare((api: BabelAPI) => {
       }
 
       if (path.node.computed && t.isNumericLiteral(path.node.property)) {
-        path.replaceWith(utils.makeSyncCall(path.node.object,'nth', [path.node.property]));
+        path.replaceWith(utils.makeSyncCall(path.node.object, 'nth', [path.node.property]));
         return;
       }
 

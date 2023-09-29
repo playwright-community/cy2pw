@@ -15,14 +15,14 @@
  */
 
 import { transform } from './transform';
-import { BabelAPI } from '@babel/helper-plugin-utils';
+import type { BabelAPI } from '@babel/helper-plugin-utils';
 
 type Result = {
   text?: string;
   error?: { message: string, line: number, column: number };
 };
 
-export default function(api: BabelAPI, prettier: any, text: string, plugins?: any): Result {
+export default async function(api: BabelAPI, prettier: typeof import('prettier'), text: string, plugins?: any): Promise<Result> {
   try {
     text = api.transform(text, {
       plugins: [transform],
@@ -44,9 +44,10 @@ export default function(api: BabelAPI, prettier: any, text: string, plugins?: an
     text = `import { test, expect } from '@playwright/test';\n\n${text}\n`;
 
   try {
-    text = prettier.format(text, {
+    text = await prettier.format(text, {
       parser: 'babel',
       semi: true,
+      trailingComma: 'es5',
       singleQuote: true,
       plugins
     });

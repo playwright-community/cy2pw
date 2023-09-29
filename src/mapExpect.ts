@@ -17,7 +17,7 @@
 import type { types as t } from '@babel/core';
 import type { BabelAPI } from '@babel/helper-plugin-utils';
 import type { Context, Subject } from './mapping';
-import { createMapping, ReturnValue, SubjectType } from './mapping';
+import { createMapping, type ReturnValue, SubjectType } from './mapping';
 import { capitalize, createUtils } from './utils';
 
 export const createExpectMapping = (api: BabelAPI) => {
@@ -64,9 +64,9 @@ export const createExpectMapping = (api: BabelAPI) => {
         return wrap(subject, subject.expectSync('FIXME_toBeA', args));
       return wrap(subject, subject.expectSync('toEqual', [
         utils.makeSyncCall(
-          t.identifier('expect'),
-          'any',
-          [t.identifier(capitalize(args[0].value))]
+            t.identifier('expect'),
+            'any',
+            [t.identifier(capitalize(args[0].value))]
         )
       ]));
     }

@@ -15,8 +15,8 @@
  */
 
 import type { NodePath, types as t, Visitor } from '@babel/core';
-import { BabelAPI } from '@babel/helper-plugin-utils';
-import { Arg, createUtils } from './utils';
+import { type BabelAPI } from '@babel/helper-plugin-utils';
+import { type Arg, createUtils } from './utils';
 
 export enum SubjectType {
   Page = 'Page',

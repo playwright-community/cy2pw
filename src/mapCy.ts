@@ -19,9 +19,9 @@ import type { BabelAPI } from '@babel/helper-plugin-utils';
 import type { Context, Subject } from './mapping';
 import { httpMethods, httpMethodsWithShortcut } from './http';
 import { createKeys } from './keyboard';
-import { createMapping, SubjectType, ReturnValue } from './mapping';
+import { createMapping, SubjectType, type ReturnValue } from './mapping';
 import { locatorMatchers, pageMatchers, valueMatchers } from './matchers';
-import { Arg, createUtils } from './utils';
+import { type Arg, createUtils } from './utils';
 import { deviceViewports } from './viewports';
 
 export const createCyMapping = (api: BabelAPI) => {
@@ -490,8 +490,8 @@ export const createCyMapping = (api: BabelAPI) => {
 
       const { scope } = createScopeVariable(SubjectType.Response, 'response', context);
       const varExpression = t.variableDeclaration(
-        'const',
-        [t.variableDeclarator(scope.expression as t.Identifier, responseExpression)]
+          'const',
+          [t.variableDeclarator(scope.expression as t.Identifier, responseExpression)]
       );
       return wrap(scope, varExpression);
     }
@@ -913,7 +913,7 @@ export const createCyMapping = (api: BabelAPI) => {
     wrap(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
       return wrap(createSubject(SubjectType.Value, args[0]));
     }
-  
+
     _locatorSubject(subject: Subject, context: Context): Subject {
       if (context.state.scope?.type === SubjectType.Locator)
         return context.state.scope;

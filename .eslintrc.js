@@ -1,10 +1,14 @@
 module.exports = {
     parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "notice"],
     parserOptions: {
-      ecmaVersion: 9,
-      sourceType: "module",
+        ecmaVersion: 9,
+        sourceType: "module",
+        project: 'tsconfig.json',
     },
+    extends: [
+      "plugin:react-hooks/recommended"
+    ],
 
     /**
      * ESLint rules
@@ -17,6 +21,7 @@ module.exports = {
      */
     rules: {
         "@typescript-eslint/no-unused-vars": [2, {args: "none"}],
+        "@typescript-eslint/consistent-type-imports": [2, {disallowTypeAnnotations: false}],
         /**
          * Enforced rules
          */
@@ -111,6 +116,13 @@ module.exports = {
         "indent": [2, 2, { "SwitchCase": 1, "CallExpression": {"arguments": 2}, "MemberExpression": 2 }],
         "key-spacing": [2, {
             "beforeColon": false
-        }]
+        }],
+
+        // copyright
+        "notice/notice": [2, {
+            "mustMatch": "Copyright",
+            "templateFile": require("path").join(__dirname, "utils", "copyright.js"),
+        }],
+        '@typescript-eslint/no-floating-promises': 'error',
     }
 };

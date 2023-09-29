@@ -35,33 +35,35 @@ program
 program.showHelpAfterError();
 program.parse();
 
-function traverse(folder: string, out: string) {
-  if (fs.statSync(folder).isFile()) {
-    processFile(folder, out);
+async function traverse(folder: string, out: string) {
+  const stats = await fs.promises.stat(folder);
+  if (stats.isFile()) {
+    await processFile(folder, out);
     return;
   }
 
-  for (const name of fs.readdirSync(folder)) {
+  for (const name of await fs.promises.readdir(folder)) {
     const entry = path.join(folder, name);
     const outEntry = path.join(out, name);
-    if (fs.statSync(entry).isDirectory()) {
-      traverse(entry, outEntry);
+    const stats = await fs.promises.stat(entry);
+    if (stats.isDirectory()) {
+      await traverse(entry, outEntry);
       continue;
     }
     if (entry.endsWith('cy.js'))
-      processFile(entry, outEntry);
+      await processFile(entry, outEntry);
   }
 }
 
-function processFile(fileName: string, out: string) {
+async function processFile(fileName: string, out: string) {
   out = out.replace('cy.js', 'spec.ts');
   console.log(`${fileName} -> ${out}`);
-  let text = fs.readFileSync(fileName, 'utf-8');
+  let text = await fs.promises.readFile(fileName, 'utf-8');
   text = text.replace('/// <reference types="cypress" />\n', '');
-  const result = cy2pw(babel as BabelAPI, prettier, text);
+  const result = await cy2pw(babel as BabelAPI, prettier, text);
   if (!result.text)
     throw new Error(result.error?.message);
   text = result.text;
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, text);
+  await fs.promises.mkdir(path.dirname(out), { recursive: true });
+  await fs.promises.writeFile(out, text);
 }

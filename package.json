@@ -25,25 +25,27 @@
   },
   "keywords": [],
   "dependencies": {
-    "@babel/core": "^7.20.5",
-    "@babel/generator": "^7.20.5",
-    "@babel/helper-plugin-utils": "^7.20.2",
-    "@babel/parser": "^7.20.5",
-    "@babel/standalone": "^7.20.6",
-    "@babel/traverse": "^7.20.5",
-    "@babel/types": "^7.20.5",
-    "commander": "^9.4.1",
-    "prettier": "^2.8.1"
+    "@babel/core": "^7.23.0",
+    "@babel/generator": "^7.23.0",
+    "@babel/helper-plugin-utils": "^7.22.5",
+    "@babel/parser": "^7.23.0",
+    "@babel/standalone": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@babel/types": "^7.23.0",
+    "commander": "^11.0.0",
+    "prettier": "^3.0.3"
   },
   "devDependencies": {
-    "@playwright/test": "1.29.0",
-    "@types/babel__core": "^7.1.20",
-    "@types/babel__helper-plugin-utils": "^7.10.0",
-    "@types/babel__traverse": "^7.18.3",
-    "@types/prettier": "^2.7.1",
-    "@typescript-eslint/eslint-plugin": "^5.46.1",
-    "@typescript-eslint/parser": "^5.46.1",
-    "eslint": "^8.29.0",
-    "typescript": "^4.9.3"
+    "@playwright/test": "1.38.0",
+    "@types/babel__core": "^7.20.0",
+    "@types/babel__helper-plugin-utils": "^7.10.1",
+    "@types/babel__traverse": "^7.20.2",
+    "@types/node": "^20.7.2",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "eslint": "^8.37.0",
+    "eslint-plugin-notice": "^0.9.10",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "typescript": "^5.2.2"
   }
 }
