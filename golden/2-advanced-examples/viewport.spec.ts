@@ -27,36 +27,21 @@ test.describe('Viewport', () => {
     // We added a cy.wait() between each viewport change so you can see
     // the change otherwise it is a little too fast to see :)
     // macbook-15
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.waitForTimeout(200); // macbook-13
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.waitForTimeout(200); // macbook-11
-    await page.setViewportSize({ width: 1366, height: 768 });
-    await page.waitForTimeout(200); // ipad-2
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(200); // ipad-mini
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(200); // iphone-6+
-    await page.setViewportSize({ width: 414, height: 736 });
-    await page.waitForTimeout(200); // iphone-6
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.waitForTimeout(200); // iphone-5
-    await page.setViewportSize({ width: 320, height: 568 });
-    await page.waitForTimeout(200); // iphone-4
+    await page.setViewportSize({ width: 1440, height: 900 }); // macbook-13
+    await page.setViewportSize({ width: 1280, height: 800 }); // macbook-11
+    await page.setViewportSize({ width: 1366, height: 768 }); // ipad-2
+    await page.setViewportSize({ width: 768, height: 1024 }); // ipad-mini
+    await page.setViewportSize({ width: 768, height: 1024 }); // iphone-6+
+    await page.setViewportSize({ width: 414, height: 736 }); // iphone-6
+    await page.setViewportSize({ width: 375, height: 667 }); // iphone-5
+    await page.setViewportSize({ width: 320, height: 568 }); // iphone-4
+    await page.setViewportSize({ width: 320, height: 480 }); // iphone-3
     await page.setViewportSize({ width: 320, height: 480 });
-    await page.waitForTimeout(200); // iphone-3
-    await page.setViewportSize({ width: 320, height: 480 });
-    await page.waitForTimeout(200);
 
     // cy.viewport() accepts an orientation for all presets
     // the default orientation is 'portrait'
     // ipad-2
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(200); // iphone-4, landscape
+    await page.setViewportSize({ width: 768, height: 1024 }); // iphone-4, landscape
     await page.setViewportSize({ width: 480, height: 320 });
-    await page.waitForTimeout(200);
-
-    // The viewport will be reset back to the default dimensions
-    // in between tests (the  default can be set in cypress.config.{js|ts})
   });
 });

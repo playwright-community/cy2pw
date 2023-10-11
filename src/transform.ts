@@ -89,7 +89,7 @@ export const transform = declare((api: BabelAPI) => {
         return;
       if (prefixWithTest(path, 'context', false, false))
         return;
-      for (const fixture of ['beforeEach', 'afterEach']) {
+      for (const fixture of ['before', 'beforeEach', 'afterEach']) {
         if (prefixWithTest(path, fixture, true, true))
           return;
       }
@@ -225,6 +225,10 @@ export const transform = declare((api: BabelAPI) => {
       callback.async = true;
     if (fixture === 'context')
       fixture = 'describe';
+    if (fixture === 'before')
+      fixture = 'beforeAll';
+    if (fixture === 'after')
+      fixture = 'afterAll';
     if (addPageFixture) {
       callback.params = [t.objectExpression([
         t.objectProperty(t.identifier('page'), t.identifier('page'), false, true)
@@ -359,6 +363,13 @@ export const transform = declare((api: BabelAPI) => {
         }
       }
 
+      // .type({selectall}).type(...)
+      if (method === 'type' && expression.arguments.length > 1 && followingMethod === 'type') {
+        if (utils.isStringLiteralEqual(expression.arguments[0], '{selectall}')) {
+          // consume the token.
+          continue;
+        }
+      }
       result.push(entry);
     }
     return result;

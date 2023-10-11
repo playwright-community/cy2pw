@@ -22,7 +22,7 @@ test.describe('Actions', () => {
     await page.locator('.action-email').press('Backspace');
     await page
       .locator('.action-email')
-      .type('slow.typing@email.com', { delay: 100 });
+      .pressSequentially('slow.typing@email.com', { delay: 100 });
     await expect(page.locator('.action-email')).toHaveValue(
       'slow.typing@email.com'
     );
@@ -32,7 +32,7 @@ test.describe('Actions', () => {
     // https://on.cypress.io/type
     await page
       .locator('.action-email')
-      .type('slow.typing@email.com', { delay: 100 });
+      .pressSequentially('slow.typing@email.com', { delay: 100 });
     await expect(page.locator('.action-email')).toHaveValue(
       'slow.typing@email.com'
     );

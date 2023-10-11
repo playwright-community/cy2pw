@@ -42,6 +42,22 @@ export const createUtils = (api: BabelAPI) => {
       return property as t.ObjectProperty;
     }
 
+    getProperties(arg: t.ObjectExpression, names: string[] | undefined, exclude?: string[]): t.ObjectProperty[] {
+      const result: t.ObjectProperty[] = [];
+      for (const property of arg.properties) {
+        if (!t.isObjectProperty(property))
+          continue;
+        if (!t.isIdentifier(property.key))
+          continue;
+        if (exclude?.includes(property.key.name))
+          continue;
+        if (names && !names.includes(property.key.name))
+          continue;
+        result.push(property);
+      }
+      return result;
+    }
+
     getMethod(arg: t.ObjectExpression, name: string) {
       const property = arg.properties.find(p => t.isObjectMethod(p) && t.isIdentifier(p.key, { name }));
       return (property as t.ObjectMethod);
@@ -62,11 +78,11 @@ export const createUtils = (api: BabelAPI) => {
       return node;
     }
 
-    callOptionProperties(args: Arg[], names: string[]): t.ObjectProperty[] {
+    callOptionProperties(args: Arg[], names: string[] | undefined, exclude?: string[]): t.ObjectProperty[] {
       const optionsArg = args[args.length - 1];
       if (!t.isObjectExpression(optionsArg))
         return [];
-      return names.map(n => this.getProperty(optionsArg, n)).filter(Boolean);
+      return this.getProperties(optionsArg, names, exclude);
     }
 
     callOptionPropertyValue(args: Arg[], name: string): t.Expression | undefined {
@@ -77,8 +93,8 @@ export const createUtils = (api: BabelAPI) => {
       return !!this.callOptionProperties(args, [name]).length;
     }
 
-    callOptions(args: Arg[], names: string[]): t.ObjectExpression[] {
-      const properties = this.callOptionProperties(args, names);
+    callOptions(args: Arg[], names: string[] | undefined, exclude?: string[]): t.ObjectExpression[] {
+      const properties = this.callOptionProperties(args, names, exclude);
       return properties.length ? [t.objectExpression(properties)] : [];
     }
 
@@ -93,8 +109,9 @@ export const createUtils = (api: BabelAPI) => {
       return true;
     }
 
-    isStringLiteralEqual(node: t.Node, value: string): boolean {
-      return t.isStringLiteral(node) && node.value === value;
+    isStringLiteralEqual(node: t.Node, value: string | string[]): node is t.StringLiteral {
+      const values = Array.isArray(value) ? value : [value];
+      return t.isStringLiteral(node) && values.includes(node.value);
     }
 
     escapeForRegex(text: string) {

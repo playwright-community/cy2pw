@@ -38,13 +38,11 @@ test.describe('Actions', () => {
     await page.keyboard.up('Shift');
     await page
       .locator('.action-email')
-      .type('slow.typing@email.com', { delay: 100 });
+      .pressSequentially('slow.typing@email.com', { delay: 100 });
     await expect(page.locator('.action-email')).toHaveValue(
       'slow.typing@email.com'
     );
-    await page
-      .locator('.action-disabled')
-      .fill('disabled error checking', { force: true });
+    await page.locator('.action-disabled').fill('disabled error checking');
     await expect(page.locator('.action-disabled')).toHaveValue(
       'disabled error checking'
     );
@@ -209,7 +207,7 @@ test.describe('Actions', () => {
       await locator.click();
 
     // Ignore error checking prior to clicking
-    await page.locator('.action-opacity>.btn').click({ force: true });
+    await page.locator('.action-opacity>.btn').click();
   });
 
   test('.dblclick() - double click on a DOM element', async ({ page }) => {
@@ -277,16 +275,12 @@ test.describe('Actions', () => {
     ).toBeChecked();
 
     // Ignore error checking prior to checking
-    await page.locator('.action-checkboxes [disabled]').check({
-      force: true,
-    });
+    await page.locator('.action-checkboxes [disabled]').check();
     await expect(page.locator('.action-checkboxes [disabled]')).toBeChecked();
     await page
       .locator('.action-radios [type="radio"]')
       .locator('input[value="radio3"]:scope')
-      .check({
-        force: true,
-      });
+      .check();
     await expect(page.locator('.action-radios [type="radio"]')).toBeChecked();
   });
 
@@ -340,9 +334,7 @@ test.describe('Actions', () => {
     ).not.toBeChecked();
 
     // Ignore error checking prior to unchecking
-    await page.locator('.action-check [disabled]').uncheck({
-      force: true,
-    });
+    await page.locator('.action-check [disabled]').uncheck();
     await expect(page.locator('.action-check [disabled]')).not.toBeChecked();
   });
 

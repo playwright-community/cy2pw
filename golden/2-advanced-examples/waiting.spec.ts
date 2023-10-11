@@ -10,11 +10,8 @@ test.describe('Waiting', () => {
   // https://on.cypress.io/wait
   test('cy.wait() - wait for a specific amount of time', async ({ page }) => {
     await page.locator('.wait-input1').fill('Wait 1000ms after typing');
-    await page.waitForTimeout(1000);
     await page.locator('.wait-input2').fill('Wait 1000ms after typing');
-    await page.waitForTimeout(1000);
     await page.locator('.wait-input3').fill('Wait 1000ms after typing');
-    await page.waitForTimeout(1000);
   });
 
   test('cy.wait() - wait for a specific route', async ({ page }) => {

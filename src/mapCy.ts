@@ -379,6 +379,10 @@ export const createCyMapping = (api: BabelAPI) => {
     }
 
     eq(subject: Subject, args: t.Expression[]): ReturnValue {
+      if (t.isNumericLiteral(args[0]) && args[0].value === 0)
+        return wrap(subject.chain('first', [], SubjectType.Locator));
+      if (t.isNumericLiteral(args[0]) && args[0].value === -1)
+        return wrap(subject.chain('last', [], SubjectType.Locator));
       return wrap(subject.chain('nth', args, SubjectType.Locator));
     }
 
@@ -528,6 +532,10 @@ export const createCyMapping = (api: BabelAPI) => {
       if (t.isArrayExpression(args[0]))
         return wrap(subject, subject.callAsync('selectOption', [t.arrayExpression((args[0].elements as any).map(wrapLabel))]));
       return returnAsyncFixme(subject, 'select', args);
+    }
+
+    shadow(subject: Subject): ReturnValue {
+      return wrap(subject);
     }
 
     should(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
@@ -712,10 +720,17 @@ export const createCyMapping = (api: BabelAPI) => {
     }
 
     trigger(subject: Subject, args: t.Expression[]): ReturnValue {
-      // It is unsafe to chain to trigger, hence re-root.
+      const options = utils.callOptions(args, undefined, ['force']);
+      if (utils.isStringLiteralEqual(args[0], ['mousedown', 'mouseup', 'mousemove'])) {
+        // .trigger('mousedown', x, y, { ...options })
+        const pageMouse = pageSubject.member('mouse', SubjectType.Mouse);
+        const event = args[0].value;
+        const suffix = event.substring('mouse'.length);
+        return wrap(pageMouse, subject.callAsync(suffix, args.length > 2 ? [args[1], args[2]] : []));
+      }
       return wrap(
-          pageSubject,
-          subject.callAsync('dispatchEvent', args));
+          subject,
+          subject.callAsync('dispatchEvent', [args[0], ...options]));
     }
 
     type(subject: Subject, args: t.Expression[]): ReturnValue {
@@ -749,13 +764,13 @@ export const createCyMapping = (api: BabelAPI) => {
         }
       }
 
-      const options = utils.callOptions(args, ['force', 'timeout', 'delay']);
-      const optionsWithoutDelay = utils.callOptions(args, ['force', 'timeout']);
-      const effectiveMethod = utils.hasCallOption(args, 'delay') ? 'type' : 'fill';
+      const options = utils.callOptions(args, ['timeout', 'delay']);
+      const effectiveMethod = utils.hasCallOption(args, 'delay') ? 'pressSequentially' : 'fill';
 
       if (!tokens.find(t => !!t.key))
         return wrap(subject, subject.callAsync(effectiveMethod, [args[0], ...options]));
 
+      const optionsWithoutDelay = utils.callOptions(args, ['timeout']);
       const pageKeyboard = pageSubject.member('keyboard', SubjectType.Keyboard);
       const modifiers: string[] = [];
       const result: t.Expression[] = [];
@@ -868,8 +883,10 @@ export const createCyMapping = (api: BabelAPI) => {
 
     wait(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
       const [arg1, arg2] = args;
-      if (arg1 && t.isNumericLiteral(arg1) && !arg2)
-        return wrap(subject, subject.callAsync('waitForTimeout', args));
+      if (arg1 && t.isNumericLiteral(arg1) && !arg2) {
+        // Erase all the wait for timeouts.
+        return wrap(subject);
+      }
       if (arg1 && t.isStringLiteral(arg1) && arg1.value.startsWith('@')) {
         const alias = arg1.value.substring(1);
         const aliasType = context.aliasTypes.get(alias);
@@ -988,7 +1005,7 @@ export const createCyMapping = (api: BabelAPI) => {
               t.arrayExpression(modifiers)));
         }
 
-        properties.push(...utils.callOptionProperties(args, ['force', 'timeout']));
+        properties.push(...utils.callOptionProperties(args, ['timeout']));
         multiple = utils.getBooleanProperty(clickOptions, 'multiple');
       }
 
@@ -1006,7 +1023,6 @@ export const createCyMapping = (api: BabelAPI) => {
 
       if (position)
         properties.push(this._positionProperty(subject, position as any));
-
       const clickExpression = subject.callAsync(kind === 'dblclick' ? 'dblclick' : 'click', properties.length ? [t.objectExpression(properties)] : []);
       if (position) {
         return wrap(subject, t.blockStatement([
@@ -1018,7 +1034,7 @@ export const createCyMapping = (api: BabelAPI) => {
     }
 
     _check(kind: 'check' | 'uncheck', subject: Subject, args: t.Expression[]): ReturnValue {
-      const options = utils.callOptions(args, ['force', 'timeout']);
+      const options = utils.callOptions(args, ['timeout']);
       const checkCall = (value: t.StringLiteral) => {
         const additionalSelector = `input[value="${value.value}"]:scope`;
         const locatorWithValue = subject.chain('locator', [t.stringLiteral(additionalSelector)], SubjectType.Locator);

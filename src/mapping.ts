@@ -29,6 +29,7 @@ export enum SubjectType {
   Response = 'Response',
   Value = 'Value',
   Keyboard = 'Keyboard',
+  Mouse = 'Mouse',
   Void = 'Void',
 }
 
