@@ -17,14 +17,14 @@ test.describe('use ellipse and circle of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_circle', async function ({ page }) {
     await page.locator('#tool_circle').click();
     await page.locator('#svgcontent').down(200, 200);
     await page.mouse.move(300, 200);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_fhellipse', async function ({ page }) {
     await page.locator('#tool_fhellipse').click();
@@ -34,19 +34,19 @@ test.describe('use ellipse and circle of svg-edit', function () {
     await page.mouse.move();
     await page.mouse.move();
     await page.mouse.up(200, 100);
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse', async function ({ page }) {
     await page.locator('#tool_ellipse').click();
     await page.locator('#svgcontent').down(100, 300);
     await page.mouse.move(200, 200);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_circle_change_fill_color', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#js-se-palette').locator('.square').nth(8).click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_circle_change_opacity', async function ({ page }) {
     await page.locator('#svg_2').click();
@@ -59,7 +59,7 @@ test.describe('use ellipse and circle of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_change_rotation', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -72,7 +72,7 @@ test.describe('use ellipse and circle of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_change_blur', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -85,7 +85,7 @@ test.describe('use ellipse and circle of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_change_cx_cy_coordinate', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -107,7 +107,7 @@ test.describe('use ellipse and circle of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_change_rx_ry_radius', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -129,21 +129,21 @@ test.describe('use ellipse and circle of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_bring_to_back', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#tool_move_bottom').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_bring_to_front', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#tool_move_top').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_ellipse_clone', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#tool_clone').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
 });

@@ -62,7 +62,7 @@ test.describe('Utilities', () => {
     matching = Cypress.minimatch('/users/1/comments/2', '/users/*/comments', {
       matchBase: true,
     });
-    expect(matching).FIXME_be_false();
+    expect(matching).be_false(page);
 
     // ** matches against all downstream path segments
     matching = Cypress.minimatch('/foo/bar/baz/123/quux?a=b&c=2', '/foo/**', {
@@ -75,7 +75,7 @@ test.describe('Utilities', () => {
     matching = Cypress.minimatch('/foo/bar/baz/123/quux?a=b&c=2', '/foo/*', {
       matchBase: false,
     });
-    expect(matching).FIXME_be_false();
+    expect(matching).be_false(page);
   });
 
   test('Cypress.Promise - instantiate a bluebird promise', async ({ page }) => {

@@ -59,7 +59,17 @@ export const createCyMapping = (api: BabelAPI) => {
     }
 
     fallback(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
-      if (subject.type === SubjectType.Locator || subject.type === SubjectType.Page)
+      if (subject.type === SubjectType.Page) {
+        return {
+          subject,
+          nodes: [
+            t.awaitExpression(
+                t.callExpression(t.identifier(context.method), [t.identifier('page'), ...(args || [])])
+            )
+          ],
+        };
+      }
+      if (subject.type === SubjectType.Locator)
         return returnSyncFixme(subject, context.method, args);
       return wrap(subject.chain(context.method, args, SubjectType.Value));
     }
@@ -97,6 +107,14 @@ export const createCyMapping = (api: BabelAPI) => {
 
     clear(subject: Subject, args: t.Expression[]): ReturnValue {
       return wrap(subject, subject.callAsync('clear'));
+    }
+
+    clearCookies(subject: Subject, args: t.Expression[]): ReturnValue {
+      return wrap(subject, utils.makeAsyncCall(subject.callSync('context'), 'clearCookies'));
+    }
+
+    clearLocalStorage(subject: Subject, args: t.Expression[]): ReturnValue {
+      return returnAsyncFixme(subject, 'clearLocalStorage', args);
     }
 
     click(subject: Subject, args: t.Expression[]): ReturnValue {
@@ -146,6 +164,10 @@ export const createCyMapping = (api: BabelAPI) => {
 
     dblclick(subject: Subject, args: t.Expression[]): ReturnValue {
       return this._click('dblclick', subject, args);
+    }
+
+    document(subject: Subject, args: t.Expression[]): ReturnValue {
+      return returnAsyncFixme(subject, 'document', args);
     }
 
     end(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
@@ -254,6 +276,30 @@ export const createCyMapping = (api: BabelAPI) => {
       return wrap(
           subject,
           this.should(subject, [t.stringLiteral('be.visible')], context).nodes);
+    }
+
+    getCookie(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
+      const cookiesExpression = utils.makeAsyncCall(subject.callSync('context'), 'cookies');
+      const predicateExpression = t.arrowFunctionExpression(
+          [t.identifier('c')],
+          t.binaryExpression(
+              '===',
+              t.memberExpression(t.identifier('c'), t.identifier('name')),
+              args[0]
+          )
+      );
+      const cookieExpression = utils.makeSyncCall(cookiesExpression, 'find', [predicateExpression]);
+      const { scope } = createScopeVariable(SubjectType.Value, 'cookie', context);
+      const varExpression = t.variableDeclaration(
+          'const',
+          [t.variableDeclarator(scope.expression as t.Identifier, cookieExpression)]
+      );
+      return wrap(scope, varExpression);
+    }
+
+    getCookies(subject: Subject, args: t.Expression[]): ReturnValue {
+      const valueSubject = createSubject(SubjectType.Value, utils.makeAsyncCall(subject.callSync('context'), 'cookies'));
+      return { subject: valueSubject, nodes: [] };
     }
 
     go(subject: Subject, args: t.Expression[]): ReturnValue {
@@ -532,6 +578,26 @@ export const createCyMapping = (api: BabelAPI) => {
       if (t.isArrayExpression(args[0]))
         return wrap(subject, subject.callAsync('selectOption', [t.arrayExpression((args[0].elements as any).map(wrapLabel))]));
       return returnAsyncFixme(subject, 'select', args);
+    }
+
+    setCookie(subject: Subject, args: t.Expression[]): ReturnValue {
+      if (args.length === 3) {
+        return wrap(subject, utils.makeAsyncCall(subject.callSync('context'), 'addCookies', [t.arrayExpression([
+          t.objectExpression([
+            t.objectProperty(t.identifier('name'), args[0]),
+            t.objectProperty(t.identifier('value'), args[1]),
+            t.objectProperty(t.identifier('url'), subject.callSync('url')),
+            t.spreadElement(args[2]),
+          ])
+        ])]));
+      }
+      return wrap(subject, utils.makeAsyncCall(subject.callSync('context'), 'addCookies', [t.arrayExpression([
+        t.objectExpression([
+          t.objectProperty(t.identifier('name'), args[0]),
+          t.objectProperty(t.identifier('value'), args[1]),
+          t.objectProperty(t.identifier('url'), subject.callSync('url')),
+        ])
+      ])]));
     }
 
     shadow(subject: Subject): ReturnValue {

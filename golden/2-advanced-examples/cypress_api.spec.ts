@@ -48,21 +48,31 @@ test.describe('Cypress.Cookies', () => {
 
     // Cypress will now log in the console when
     // cookies are set or cleared
-    page.FIXME_setCookie('fakeCookie', '123ABC');
-    page.FIXME_clearCookie('fakeCookie');
-    page.FIXME_setCookie('fakeCookie', '123ABC');
-    page.FIXME_clearCookie('fakeCookie');
-    page.FIXME_setCookie('fakeCookie', '123ABC');
+    await page
+      .context()
+      .addCookies([{ name: 'fakeCookie', value: '123ABC', url: page.url() }]);
+    await clearCookie(page, 'fakeCookie');
+    await page
+      .context()
+      .addCookies([{ name: 'fakeCookie', value: '123ABC', url: page.url() }]);
+    await clearCookie(page, 'fakeCookie');
+    await page
+      .context()
+      .addCookies([{ name: 'fakeCookie', value: '123ABC', url: page.url() }]);
   });
 
   test('.preserveOnce() - preserve cookies by key', async ({ page }) => {
     // normally cookies are reset after each test
-    page.FIXME_getCookie('fakeCookie');
-    await page.FIXME_should('not.be.ok');
+    const cookie = (await page.context().cookies()).find(
+      (c) => c.name === 'fakeCookie'
+    );
+    await cookie.FIXME_should('not.be.ok');
 
     // preserving a cookie will not clear it when
     // the next test starts
-    page.FIXME_setCookie('lastCookie', '789XYZ');
+    await page
+      .context()
+      .addCookies([{ name: 'lastCookie', value: '789XYZ', url: page.url() }]);
     Cypress.Cookies.preserveOnce('lastCookie');
   });
 
@@ -82,7 +92,7 @@ test.describe('Cypress.arch', () => {
 
   test('Get CPU architecture name of underlying OS', async ({ page }) => {
     // https://on.cypress.io/arch
-    expect(process.arch).FIXME_exist();
+    expect(process.arch).exist(page);
   });
 });
 
@@ -127,7 +137,7 @@ test.describe('Cypress.dom', () => {
 
     // our first paragraph has css class 'hidden'
     expect(Cypress.dom.isHidden(hiddenP)).toBeTruthy();
-    expect(Cypress.dom.isHidden(visibleP)).FIXME_be_false();
+    expect(Cypress.dom.isHidden(visibleP)).be_false(page);
   });
 });
 
@@ -180,7 +190,7 @@ test.describe('Cypress.platform', () => {
 
   test('Get underlying OS name', async ({ page }) => {
     // https://on.cypress.io/platform
-    expect(process.platform).FIXME_be_exist();
+    expect(process.platform).be_exist(page);
   });
 });
 
@@ -191,7 +201,7 @@ test.describe('Cypress.version', () => {
 
   test('Get current version of Cypress being run', async ({ page }) => {
     // https://on.cypress.io/version
-    expect(Cypress.version).FIXME_be_exist();
+    expect(Cypress.version).be_exist(page);
   });
 });
 

@@ -31,7 +31,7 @@ export const createExpectMapping = (api: BabelAPI) => {
     }
 
     fallback(subject: Subject, args: t.Expression[], context: Context): ReturnValue {
-      return wrap(subject, subject.expectSync(`FIXME_${context.method}`, args));
+      return wrap(subject, subject.expectSync(context.method, [t.identifier('page'), ...(args || [])]));
     }
 
     expect(subject: Subject, args: t.Expression[], context: Context): ReturnValue {

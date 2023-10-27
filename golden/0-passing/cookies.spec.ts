@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Cookies', () => {
   test.beforeEach(async ({ page }) => {
-    Cypress.Cookies.debug(true);
     await page.goto('https://example.cypress.io/commands/cookies');
 
     // clear cookies again after visiting to remove
@@ -50,27 +49,6 @@ test.describe('Cookies', () => {
       (c) => c.name === 'foo'
     );
     expect(cookie).toHaveProperty('value', 'bar');
-  });
-
-  test('cy.clearCookie() - clear a browser cookie', async ({ page }) => {
-    // https://on.cypress.io/clearcookie
-    const cookie = (await page.context().cookies()).find(
-      (c) => c.name === 'token'
-    );
-    await cookie.FIXME_should('be.null');
-    await page.locator('#clearCookie .set-a-cookie').click();
-    const cookie = (await page.context().cookies()).find(
-      (c) => c.name === 'token'
-    );
-    expect(cookie).toHaveProperty('value', '123ABC');
-
-    // cy.clearCookies() yields null
-    await clearCookie(page, 'token');
-    await page.FIXME_should('be.null');
-    const cookie = (await page.context().cookies()).find(
-      (c) => c.name === 'token'
-    );
-    await cookie.FIXME_should('be.null');
   });
 
   test('cy.clearCookies() - clear browser cookies', async ({ page }) => {

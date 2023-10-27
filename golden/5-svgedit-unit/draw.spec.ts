@@ -9,7 +9,7 @@ test.describe('draw.Drawing', function () {
   const addOwnSpies = (obj) => {
     const methods = Object.keys(obj);
     methods.forEach(async (method) => {
-      page.FIXME_spy(obj, method);
+      await spy(page, obj, method);
     });
   };
 

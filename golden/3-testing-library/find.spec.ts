@@ -145,7 +145,7 @@ test.describe('find* dom-testing-library commands', () => {
     // is the `subject` when the log is added and the `$el` is the `value`
     // when the log is changed. It would be better to extract the `$el` from
     // each snapshot
-    page.FIXME_on('log:changed', async (attrs, log) => {
+    await on(page, 'log:changed', async (attrs, log) => {
       if (log.get('name') === 'findByText') {
         await expect(log.get('$el')).toHaveText('Button Text 1');
       }
@@ -155,7 +155,7 @@ test.describe('find* dom-testing-library commands', () => {
   test('findByText should error if no elements are found', async ({ page }) => {
     const regex = /Supercalifragilistic/;
     const errorMessage = `Unable to find an element with the text: /Supercalifragilistic/`;
-    page.FIXME_on('fail', async (err) => {
+    await on(page, 'fail', async (err) => {
       expect(err.message).toContain(errorMessage);
     });
   });
@@ -164,7 +164,7 @@ test.describe('find* dom-testing-library commands', () => {
     page,
   }) => {
     const errorMessage = `Expected <button> not to exist in the DOM, but it was continuously found.`;
-    page.FIXME_on('fail', async (err) => {
+    await on(page, 'fail', async (err) => {
       expect(err.message).toContain(errorMessage);
     });
     await expect(
@@ -176,14 +176,14 @@ test.describe('find* dom-testing-library commands', () => {
     page,
   }) => {
     const errorMessage = `Found a label with the text of: Label 3, however no form control was found associated to that label.`;
-    page.FIXME_on('fail', async (err) => {
+    await on(page, 'fail', async (err) => {
       expect(err.message).toContain(errorMessage);
     });
   });
 
   test('findByText finding multiple items should error', async ({ page }) => {
     const errorMessage = `Found multiple elements with the text: /^Button Text/i`;
-    page.FIXME_on('fail', async (err) => {
+    await on(page, 'fail', async (err) => {
       expect(err.message).toContain(errorMessage);
     });
   });
@@ -194,10 +194,10 @@ test.describe('find* dom-testing-library commands', () => {
     const assertLog = async (attrs, log) => {
       if (log.get('name') === 'findByText') {
         expect(log.get('type')).toBe('parent');
-        page.FIXME_off('log:added', assertLog);
+        await off(page, 'log:added', assertLog);
       }
     };
-    page.FIXME_on('log:added', assertLog);
+    await on(page, 'log:added', assertLog);
   });
 
   test('findByText should show as a child command if it continues a chain', async ({
@@ -206,10 +206,10 @@ test.describe('find* dom-testing-library commands', () => {
     const assertLog = async (attrs, log) => {
       if (log.get('name') === 'findByText') {
         expect(log.get('type')).toBe('child');
-        page.FIXME_off('log:added', assertLog);
+        await off(page, 'log:added', assertLog);
       }
     };
-    page.FIXME_on('log:added', assertLog);
+    await on(page, 'log:added', assertLog);
   });
 });
 

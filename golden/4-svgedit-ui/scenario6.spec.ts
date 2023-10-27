@@ -17,19 +17,19 @@ test.describe('use polygon tools of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon', async function ({ page }) {
     await page.locator('#tool_polygon').click();
     await page.locator('#svgcontent').down(325, 250);
     await page.mouse.move(325, 345);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_clone', async function ({ page }) {
     await page.locator('#svg_1').click();
     await page.locator('#tool_clone').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_change_class', async function ({ page }) {
     await page.locator('#svg_2').click();
@@ -85,7 +85,7 @@ test.describe('use polygon tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_change_blur', async function ({ page }) {
     await page.locator('#svg_2_id').click();
@@ -98,7 +98,7 @@ test.describe('use polygon tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_change_opacity', async function ({ page }) {
     await page.locator('#svg_2_id').click();
@@ -111,22 +111,22 @@ test.describe('use polygon tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_bring_to_back', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_move_bottom').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_bring_to_front', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_move_top').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_delete', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_delete').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_align_to_page', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -142,7 +142,7 @@ test.describe('use polygon tools of svg-edit', function () {
       .locator('[aria-label="option"]')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   /* it('check tool_polygon_change_x_y_coordinate', function () {
     cy.get('#svg_1').click({ force: true });
@@ -167,7 +167,7 @@ test.describe('use polygon tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_change_stoke_fill_color', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -217,7 +217,7 @@ test.describe('use polygon tools of svg-edit', function () {
       .locator('#Ok')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_polygon_change_sides', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -228,6 +228,6 @@ test.describe('use polygon tools of svg-edit', function () {
       .locator('#upButton')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
 });

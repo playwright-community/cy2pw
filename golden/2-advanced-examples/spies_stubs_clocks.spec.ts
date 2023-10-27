@@ -13,13 +13,13 @@ test.describe('Spies, Stubs, and Clock', () => {
     };
 
     const spy = (async () => {
-      page.FIXME_spy(obj, 'foo');
+      await spy(page, obj, 'foo');
       const anyArgs = page;
       return page;
     })();
 
     obj.foo();
-    expect(spy).FIXME_be_called();
+    expect(spy).be_called(page);
   });
 
   test('cy.spy() retries until assertions pass', async ({ page }) => {
@@ -35,7 +35,12 @@ test.describe('Spies, Stubs, and Clock', () => {
         console.log('obj.foo called with', x);
       },
     };
-    page.FIXME_spy(obj, 'foo');
+    await spy(
+      page,
+
+      obj,
+      'foo'
+    );
     const foo = page;
 
     setTimeout(() => {
@@ -67,13 +72,13 @@ test.describe('Spies, Stubs, and Clock', () => {
     };
 
     const stub = (async () => {
-      page.FIXME_stub(obj, 'foo');
+      await stub(page, obj, 'foo');
       const foo = page;
       return page;
     })();
 
     obj.foo('foo', 'bar');
-    expect(stub).FIXME_be_called();
+    expect(stub).be_called(page);
   });
 
   test('cy.clock() - control time in the browser', async ({ page }) => {
@@ -82,7 +87,11 @@ test.describe('Spies, Stubs, and Clock', () => {
     // create the date in UTC so its always the same
     // no matter what local timezone the browser is running in
     const now = new Date(Date.UTC(2017, 2, 14)).getTime();
-    page.FIXME_clock(now);
+    await clock(
+      page,
+
+      now
+    );
     await page.goto('https://example.cypress.io/commands/spies-stubs-clocks');
     await page.locator('#clock-div').click();
     await expect(page.locator('#clock-div')).toHaveText('1489449600');
@@ -94,11 +103,19 @@ test.describe('Spies, Stubs, and Clock', () => {
     // create the date in UTC so its always the same
     // no matter what local timezone the browser is running in
     const now = new Date(Date.UTC(2017, 2, 14)).getTime();
-    page.FIXME_clock(now);
+    await clock(
+      page,
+
+      now
+    );
     await page.goto('https://example.cypress.io/commands/spies-stubs-clocks');
     await page.locator('#tick-div').click();
     await expect(page.locator('#tick-div')).toHaveText('1489449600');
-    page.FIXME_tick(10000); // 10 seconds passed
+    await tick(
+      page,
+
+      10000
+    ); // 10 seconds passed
     await page.locator('#tick-div').click();
     await expect(page.locator('#tick-div')).toHaveText('1489449610');
   });
@@ -115,15 +132,24 @@ test.describe('Spies, Stubs, and Clock', () => {
         return `Hello, ${name}!`;
       },
     };
-    page.FIXME_stub(greeter, 'greet');
-    page.FIXME_callThrough();
-    page.FIXME_withArgs(Cypress.sinon.match.string);
-    page.FIXME_returns('Hi');
-    page.FIXME_withArgs(Cypress.sinon.match.number);
-    page.FIXME_throws(new Error('Invalid name'));
+    await stub(
+      page,
+
+      greeter,
+      'greet'
+    );
+    await callThrough(page);
+    await withArgs(
+      page,
+
+      Cypress.sinon.match.string
+    );
+    await returns(page, 'Hi');
+    await withArgs(page, Cypress.sinon.match.number);
+    await throws(page, new Error('Invalid name'));
     expect(greeter.greet('World')).toBe('Hi');
-    expect(() => greeter.greet(42)).FIXME_throw('Invalid name');
-    expect(greeter.greet).FIXME_have_been_calledTwice();
+    expect(() => greeter.greet(42)).throw(page, 'Invalid name');
+    expect(greeter.greet).have_been_calledTwice(page);
 
     // non-matched calls goes the actual method
     expect(greeter.greet()).toBe('Hello, undefined!');
@@ -144,32 +170,34 @@ test.describe('Spies, Stubs, and Clock', () => {
     };
 
     const spy = (async () => {
-      page.FIXME_spy(calculator, 'add');
+      await spy(page, calculator, 'add');
       const add = page;
       return page;
     })();
     expect(calculator.add(2, 3)).toBe(5);
 
     // if we want to assert the exact values used during the call
-    expect(spy).FIXME_be_calledWith(2, 3);
+    expect(spy).be_calledWith(page, 2, 3);
 
     // let's confirm "add" method was called with two numbers
-    expect(spy).FIXME_be_calledWith(
+    expect(spy).be_calledWith(
+      page,
       Cypress.sinon.match.number,
       Cypress.sinon.match.number
     );
 
     // alternatively, provide the value to match
-    expect(spy).FIXME_be_calledWith(
+    expect(spy).be_calledWith(
+      page,
       Cypress.sinon.match(2),
       Cypress.sinon.match(3)
     );
 
     // match any value
-    expect(spy).FIXME_be_calledWith(Cypress.sinon.match.any, 3);
+    expect(spy).be_calledWith(page, Cypress.sinon.match.any, 3);
 
     // match any value from a list
-    expect(spy).FIXME_be_calledWith(Cypress.sinon.match.in([1, 2, 3]), 3);
+    expect(spy).be_calledWith(page, Cypress.sinon.match.in([1, 2, 3]), 3);
 
     /**
      * Returns true if the given number is even
@@ -180,7 +208,7 @@ test.describe('Spies, Stubs, and Clock', () => {
     // expect the value to pass a custom predicate function
     // the second argument to "sinon.match(predicate, message)" is
     // shown if the predicate does not pass and assertion fails
-    expect(spy).FIXME_be_calledWith(Cypress.sinon.match(isEven, 'isEven'), 3);
+    expect(spy).be_calledWith(page, Cypress.sinon.match(isEven, 'isEven'), 3);
 
     /**
      * Returns a function that checks if a given number is larger than the limit
@@ -197,13 +225,15 @@ test.describe('Spies, Stubs, and Clock', () => {
     const isLessThan = (limit) => (x) => x < limit;
 
     // you can combine several matchers using "and", "or"
-    expect(spy).FIXME_be_calledWith(
+    expect(spy).be_calledWith(
+      page,
       Cypress.sinon.match.number,
       Cypress.sinon
         .match(isGreaterThan(2), '> 2')
         .and(Cypress.sinon.match(isLessThan(4), '< 4'))
     );
-    expect(spy).FIXME_be_calledWith(
+    expect(spy).be_calledWith(
+      page,
       Cypress.sinon.match.number,
       Cypress.sinon
         .match(isGreaterThan(200), '> 200')

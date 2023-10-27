@@ -127,6 +127,7 @@ export const valueMatchers = new Map<string, MatcherType>([
         [t.identifier(capitalize(args[0].value))]
     )];
   } }],
+  ['be.empty', { target: 'toHaveLength', transform: () => [t.numericLiteral(0)] }],
   ['be.gt', { target: 'toBeGreaterThan' }],
   ['be.lt', { target: 'toBeLessThan' }],
   ['be.gte', { target: 'toBeGreaterThanOrEqual' }],

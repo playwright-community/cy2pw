@@ -12,7 +12,7 @@ test.describe('Window', () => {
 
   test('cy.document() - get the document object', async ({ page }) => {
     // https://on.cypress.io/document
-    page.FIXME_document();
+    await page.FIXME_document();
     expect(page).toHaveProperty('charset');
     expect(page).toBe('UTF-8');
   });

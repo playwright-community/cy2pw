@@ -17,19 +17,19 @@ test.describe('use star tools of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star', async function ({ page }) {
     await page.locator('#tool_star').click();
     await page.locator('#svgcontent').down(300, 150);
     await page.mouse.move(300, 250);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_clone', async function ({ page }) {
     await page.locator('#svg_1').click();
     await page.locator('#tool_clone').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_class', async function ({ page }) {
     await page.locator('#svg_2').click();
@@ -85,7 +85,7 @@ test.describe('use star tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_blur', async function ({ page }) {
     await page.locator('#svg_2_id').click();
@@ -98,7 +98,7 @@ test.describe('use star tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_opacity', async function ({ page }) {
     await page.locator('#svg_2_id').click();
@@ -111,22 +111,22 @@ test.describe('use star tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_bring_to_back', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_move_bottom').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_bring_to_front', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_move_top').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_delete', async function ({ page }) {
     await page.locator('#svg_2_id').click();
     await page.locator('#tool_delete').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_align_to_page', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -142,7 +142,7 @@ test.describe('use star tools of svg-edit', function () {
       .locator('[aria-label="option"]')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_stroke_width', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -155,7 +155,7 @@ test.describe('use star tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_stoke_fill_color', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -205,7 +205,7 @@ test.describe('use star tools of svg-edit', function () {
       .locator('#Ok')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_star_change_sides', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -216,6 +216,6 @@ test.describe('use star tools of svg-edit', function () {
       .locator('#upButton')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
 });

@@ -12,7 +12,7 @@ test.describe('Files', () => {
   test.beforeEach(async ({ page }) => {
     // load example.json fixture file and store
     // in the test context object
-    page.FIXME_fixture('example.json');
+    await fixture(page, 'example.json');
     const example = page;
   });
 
@@ -52,9 +52,9 @@ test.describe('Files', () => {
 
     // You can read a file and yield its contents
     // The filePath is relative to your project's root.
-    page.FIXME_readFile(Cypress.config('configFile'));
+    await readFile(page, Cypress.config('configFile'));
     const config = page;
-    expect(config).FIXME_be_an('string');
+    expect(config).be_an(page, 'string');
   });
 
   test('cy.writeFile() - write to a file', async ({ page }) => {
@@ -67,18 +67,26 @@ test.describe('Files', () => {
     const response = await page.request.get(
       'https://jsonplaceholder.cypress.io/users'
     );
-    page.FIXME_fixture('users');
+    await fixture(
+      page,
+
+      'users'
+    );
     const users = page;
-    expect(users.nth(0).name).FIXME_exist();
+    expect(users.nth(0).name).exist(page);
 
     // JavaScript arrays and objects are stringified
     // and formatted into text.
-    page.FIXME_writeFile('cypress/fixtures/profile.json', {
+    await writeFile(page, 'cypress/fixtures/profile.json', {
       id: 8739,
       name: 'Jane',
       email: 'jane@example.com',
     });
-    page.FIXME_fixture('profile');
+    await fixture(
+      page,
+
+      'profile'
+    );
     const profile = page;
     expect(profile.name).toBe('Jane');
   });

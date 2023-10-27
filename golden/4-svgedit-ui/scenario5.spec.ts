@@ -17,7 +17,7 @@ test.describe('use line tools of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line', async function ({ page }) {
     await page.locator('#tool_line').click();
@@ -25,7 +25,7 @@ test.describe('use line tools of svg-edit', function () {
     await page.mouse.down(200, 200);
     await page.mouse.move(250, 250);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_class', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -81,7 +81,7 @@ test.describe('use line tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_blur', async function ({ page }) {
     await page.locator('#svg_1_id').click();
@@ -94,7 +94,7 @@ test.describe('use line tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_opacity', async function ({ page }) {
     await page.locator('#svg_1_id').click();
@@ -107,12 +107,12 @@ test.describe('use line tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_delete', async function ({ page }) {
     await page.locator('#svg_1_id').click();
     await page.locator('#tool_delete').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_clone', async function ({ page }) {
     await page.locator('#tool_line').click();
@@ -122,17 +122,17 @@ test.describe('use line tools of svg-edit', function () {
     await page.mouse.up();
     await page.locator('#svg_2').click();
     await page.locator('#tool_clone').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_bring_to_back', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#tool_move_bottom').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_bring_to_front', async function ({ page }) {
     await page.locator('#svg_2').click();
     await page.locator('#tool_move_top').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_x_y_coordinate', async function ({ page }) {
     await page.locator('#svg_2').click();
@@ -172,7 +172,7 @@ test.describe('use line tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_stroke_width', async function ({ page }) {
     await page.locator('#svg_2').click();
@@ -185,7 +185,7 @@ test.describe('use line tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_change_stoke_color', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -212,7 +212,7 @@ test.describe('use line tools of svg-edit', function () {
       .locator('#Ok')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_line_align_to_page', async function ({ page }) {
     await page.locator('#svg_3').click();
@@ -228,6 +228,6 @@ test.describe('use line tools of svg-edit', function () {
       .locator('[aria-label="option"]')
       .first()
       .click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
 });

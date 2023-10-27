@@ -17,7 +17,7 @@ test.describe('use path tools of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_path', async function ({ page }) {
     await page.locator('#tool_path').click();
@@ -32,7 +32,7 @@ test.describe('use path tools of svg-edit', function () {
     await page.mouse.move(0, 0);
     await page.mouse.down(0, 0);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_path_change_node_xy', async function ({ page }) {
     await page.locator('#svg_1').click();
@@ -55,7 +55,7 @@ test.describe('use path tools of svg-edit', function () {
         .first()
         .click();
     }
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_path_change_seg_type', async function ({ page }) {
     // cy.get('#svg_1').click({ force: true })
@@ -68,7 +68,7 @@ test.describe('use path tools of svg-edit', function () {
     await page.locator('#ctrlpointgrip_3c1').down();
     await page.mouse.move(130, 175);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_path_change_clone_node', async function ({ page }) {
     // cy.get('#svg_1').click({ force: true })
@@ -77,14 +77,14 @@ test.describe('use path tools of svg-edit', function () {
     await page.locator('#pathpointgrip_4').down();
     await page.mouse.move(130, 175);
     await page.mouse.up();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_path_openclose', async function ({ page }) {
     await page.locator('#tool_select').click();
     await page.locator('#svg_1').click();
     await page.locator('#svg_1').dblclick();
     await page.locator('#tool_openclose_path').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   /* it('check tool_path_add_subpath', function () {
     cy.get('#tool_add_subpath').click({ force: true });

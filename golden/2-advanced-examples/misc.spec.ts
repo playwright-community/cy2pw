@@ -57,16 +57,24 @@ test.describe('Misc', () => {
 
       return;
     }
-    page.FIXME_exec('echo Jane Lane');
+    await exec(
+      page,
+
+      'echo Jane Lane'
+    );
     expect(page.stdout).toEqual(expect.objectContaining('Jane Lane'));
 
     if (process.platform === 'win32') {
-      page.FIXME_exec(`print ${Cypress.config('configFile')}`);
-      await page.stderr.FIXME_should('be.empty');
+      await exec(page, `print ${Cypress.config('configFile')}`);
+      expect(page.stderr).toHaveLength(0);
     } else {
-      page.FIXME_exec(`cat ${Cypress.config('configFile')}`);
-      await page.stderr.FIXME_should('be.empty');
-      page.FIXME_exec('pwd');
+      await exec(page, `cat ${Cypress.config('configFile')}`);
+      expect(page.stderr).toHaveLength(0);
+      await exec(
+        page,
+
+        'pwd'
+      );
       expect(page.code).toBe(0);
     }
   });
@@ -76,17 +84,17 @@ test.describe('Misc', () => {
   }) => {
     // https://on.cypress.io/focused
     await page.locator('.misc-form').locator('#name').click();
-    page.FIXME_focused();
+    await focused(page);
     await page.FIXME_should('have.id', 'name');
     await page.locator('.misc-form').locator('#description').click();
-    page.FIXME_focused();
+    await focused(page);
     await page.FIXME_should('have.id', 'description');
   });
 
   test.describe('Cypress.Screenshot', function () {
     test('cy.screenshot() - take a screenshot', async ({ page }) => {
       // https://on.cypress.io/screenshot
-      page.FIXME_screenshot('my-image');
+      await screenshot(page, 'my-image');
     });
 
     test('Cypress.Screenshot.defaults() - change default config of screenshots', async function ({

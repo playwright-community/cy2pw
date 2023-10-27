@@ -17,7 +17,7 @@ test.describe('check tool shape and image of svg-edit', function () {
      </svg>`
     );
     await page.locator('#tool_source_save').click();
-    page.FIXME_svgSnapshot();
+    await svgSnapshot(page);
   });
   test('check tool_shape', async function ({ page }) {
     await page.locator('#tool_shapelib').locator('.overall').first().click();
